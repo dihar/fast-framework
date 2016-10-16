@@ -189,6 +189,8 @@ $(function(){
 										.then(function(layout){
 											result = Mustache.render(layout, data.dataLayout, {partialView: result});
 											resolveDfd(dfd, cb, result);
+										}, function(err){
+											dfd.reject('Can not get layout ' + data.layout);
 										});
 								} else {
 									resolveDfd(dfd, cb, result);

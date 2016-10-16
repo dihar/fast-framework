@@ -138,7 +138,7 @@ gulp.task('watch', ()=>{
 	gulp.watch([srcPath + 'imgs/sprite/*.*'], ['sprite']);
 	gulp.watch([srcPath + 'imgs/**/*.*', '!' + srcPath + 'imgs/sprite/*.*'], ['images']);
 
-	gulp.watch(['./*.html', 'views/*.mst'], reload);
+	gulp.watch(['./*.html', 'views/**/*.mst'], reload);
 
 });
 
