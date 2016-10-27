@@ -207,13 +207,30 @@
 		})();
 	}
 
-	window.addEventListener('popstate', function(){
-		var path = window.location.pathname + window.location.hash;
-		if(!!activeRoute){
-			activeRoute.controller.clearFunction(path);
+	(function(){
+		var pathnameNow = window.location.pathname;
+		var originHandler;
+
+		// reinit jquery-router-plugin event for using stopPropagation
+		if(!!$._data(window, 'events')['popstate'] && !!$._data(window, 'events')['popstate'][0]){
+			originHandler = $._data(window, 'events')['popstate'][0].handler;
+			$._data(window, 'events')['popstate'][0].handler = function(e){
+				if(pathnameNow === window.location.pathname){
+					e.preventDefault();
+					e.stopPropagation();
+					return false;
+				}
+				originHandler.apply(this, arguments);
+
+				var path = window.location.pathname + window.location.hash;
+				if(!!activeRoute){
+					activeRoute.controller.clearFunction(path);
+				}
+				ff.router.go(path);
+			}
 		}
-		gz.router.go(path);
-	});
+	})();
+
 
 })(jQuery);
 
