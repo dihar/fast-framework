@@ -62,42 +62,124 @@
 
 		ff.router = (function(){
 			var routes = [];
-			function findRoute(name){
-				var paramRoute = $.router.getParameters(name || '');
+
+			function findRoute(route){
+				if(route === '/'){
+					return routes.filter(function(el){
+						return el.name === '/' && !el.hashParams;
+					})[0] || null;
+				}
+				var paramRoute = $.router.getParameters(route || '');
+				if(!paramRoute.length){
+					return null;
+				}
+				var paramName = paramRoute[0].route.route;
 				return routes.filter(function(el){
-					var isParamRoute = paramRoute.length > 0 && paramRoute[0].route.route === el.name; 
-					return el.name === name || isParamRoute;
-				})[0];
+					var check1 = paramName === el.name;
+					var check2 = false;
+					var check3 = false;
+
+					if(typeof paramName === 'object' && el.name === 'object' && !l.hashParams){
+						check2 = paramName.source === el.name.source;
+					}
+
+					if(!!el.hashParams && typeof paramName === 'object'){
+						check3 = createRegexpByHash(el.name, el.hashParams).source === paramName.source;
+					}
+
+					return check1 || check2 || check3;
+				})[0] || null;
 			}
+
+			function getRoute(route, hash){
+				var typeOfRoute = typeof route === 'object' || !!hash ? 'regexp' : 'string';
+				var routeName = route;
+
+				if(!!hash){
+					var routeName = createRegexpByHash(route, hash);
+				}
+
+				var equalRoute = routes.filter(function(el){
+					return el.type === typeOfRoute && 
+						typeOfRoute === 'regexp' ? 
+						el.name.source === routeName.source : el.name === routeName;
+				});
+
+				return equalRoute[0] || null;
+			}
+
+			function createRegexpByHash(base, params){
+				if(typeof params === 'string'){
+					params = [params];
+				}
+
+				var regexpString = base === 'object' ? base.source : base;
+				regexpString += '/?#';
+
+				params.forEach(function(param, i, arr){
+					if(!!i){
+						regexpString += '(?:&';
+					}
+					regexpString += (!i ? '(?:' : '') + param + '=([^&]+))?';
+					if(i === arr.length - 1){
+						regexpString += '$';
+					}
+				});
+				return new RegExp(regexpString);
+			}
+
 			return {
-				add: function(name, controller, title, id){
-					var route = findRoute(name);
+				add: function(name, controller, params){
+					if(!params){
+						params = {};
+					}
+					var route = getRoute(name, params.hashParams);
 					if(!route){
 						routes.push({
 							name: name,
 							controller: controller,
-							title: title
+							title: params.title,
+							hashParams: params.hashParams,
+							type: typeof name === 'object' ? 'regexp' : 'string'
 						});
 					} else {
 						route.name = name;
 						route.controller = controller;
-						route.title = title;
+						route.title = params.title;
+						route.hashParams = params.hashParams;
+						route.type = typeof name === 'object' ? 'regexp' : 'string';
 					}
-					
-					$.router.add(name, controller.value, id);
+					if(!!params.hashParams){
+						name = createRegexpByHash(name, params.hashParams);
+					}
+					$.router.add(name, params.param, function(data){
+						data.hash = {};
+						var parameters = params.hashParams;
+						if(!!parameters){
+							if(typeof parameters === 'string'){
+								parameters = [parameters];
+							}
+							parameters.forEach(function(el, i){
+								data.hash[el] = data.matches[i + 1];
+							});
+							delete data.matches;
+						}
+
+						controller.value(data);
+					});
 				},
 				
 				go: function(name, title, isPushState){
-					var routeParameters = $.router.getParameters(name);
+					var router = findRoute(name);
 
-					if(findRoute(name)){
+					if(router){
 						if(!title){
-							title = findRoute(name).title;
+							title = router.title;
 						}
 						if(!!activeRoute){
-							activeRoute.controller.clearFunction(name);
+							activeRoute.controller.clearFunction(router.name);
 						}
-						activeRoute = findRoute(name);
+						activeRoute = router;
 
 						$.router.go(name, title, !isPushState);
 					} else {
@@ -126,17 +208,18 @@
 	}
 
 	window.addEventListener('popstate', function(){
+		var path = window.location.pathname + window.location.hash;
 		if(!!activeRoute){
-			activeRoute.controller.clearFunction(window.location.pathname);
+			activeRoute.controller.clearFunction(path);
 		}
-		ff.router.go(window.location.pathname);
+		gz.router.go(path);
 	});
 
 })(jQuery);
 
 $(function(){
 
-	var path = window.location.pathname;
+	var path = window.location.pathname + window.location.hash;
 	if(path.length > 1 && /(.+)\/$/.test(path)){
 		path = path.slice(0, path.length - 1);
 	}
