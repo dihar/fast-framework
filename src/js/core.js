@@ -73,18 +73,27 @@
 				if(!paramRoute.length){
 					return null;
 				}
+
 				var paramName = paramRoute[0].route.route;
+
 				return routes.filter(function(el){
+					var creatingRegExp;
 					var check1 = paramName === el.name;
 					var check2 = false;
 					var check3 = false;
 
-					if(typeof paramName === 'object' && el.name === 'object' && !l.hashParams){
+					if(typeof paramName === 'object' && el.name === 'object' && !el.hashParams){
 						check2 = paramName.source === el.name.source;
 					}
 
 					if(!!el.hashParams && typeof paramName === 'object'){
-						check3 = createRegexpByHash(el.name, el.hashParams).source === paramName.source;
+						creatingRegExp = createRegexpByHash(el.name, el.hashParams);
+						if(!el.param){
+							check3 = creatingRegExp.source === paramName.source;
+						} else {
+							creatingRegExp = new RegExp(creatingRegExp.source.replace(':'+el.param, '.+'));
+							check3 = creatingRegExp.source === paramName.source;
+						}
 					}
 
 					return check1 || check2 || check3;
@@ -114,6 +123,9 @@
 				}
 
 				var regexpString = base === 'object' ? base.source : base;
+				if(regexpString.indexOf('^') === -1){
+					regexpString = '^' + regexpString;
+				}
 				regexpString += '/?#';
 
 				params.forEach(function(param, i, arr){
@@ -130,29 +142,38 @@
 
 			return {
 				add: function(name, controller, params){
+					var newName = name;
+					var paramStart = 0;
+
 					if(!params){
 						params = {};
 					}
-					var route = getRoute(name, params.hashParams);
+					var route = getRoute(newName, params.hashParams);
 					if(!route){
 						routes.push({
-							name: name,
+							name: newName,
 							controller: controller,
 							title: params.title,
 							hashParams: params.hashParams,
-							type: typeof name === 'object' ? 'regexp' : 'string'
+							param: params.param,
+							type: typeof newName === 'object' ? 'regexp' : 'string'
 						});
 					} else {
-						route.name = name;
+						route.name = newName;
 						route.controller = controller;
 						route.title = params.title;
 						route.hashParams = params.hashParams;
-						route.type = typeof name === 'object' ? 'regexp' : 'string';
+						route.param = params.param;
+						route.type = typeof newName === 'object' ? 'regexp' : 'string';
 					}
 					if(!!params.hashParams){
-						name = createRegexpByHash(name, params.hashParams);
+						newName = createRegexpByHash(newName, params.hashParams);
+						if(!!params.param && typeof name === 'string'){
+							paramStart = name.indexOf(':');
+							newName = new RegExp(newName.source.replace(':'+params.param, '.+'));
+						}
 					}
-					$.router.add(name, params.param, function(data){
+					$.router.add(newName, params.param, function(data){
 						data.hash = {};
 						var parameters = params.hashParams;
 						if(!!parameters){
@@ -163,6 +184,16 @@
 								data.hash[el] = data.matches[i + 1];
 							});
 							delete data.matches;
+						}
+						var path = window.location.pathname + window.location.hash;
+						var regExpSearchingParam;
+						var param = {};
+						if(paramStart > 0){
+							regExpSearchingParam = new RegExp('^.{'+ paramStart +'}([^/]+)');
+							param = path.match(regExpSearchingParam);
+							if(!!param[1]){
+								data[params.param] = param[1];
+							}
 						}
 
 						controller.value(data);
@@ -177,7 +208,7 @@
 							title = router.title;
 						}
 						if(!!activeRoute){
-							activeRoute.controller.clearFunction(router.name);
+							activeRoute.controller.clearFunction(name);
 						}
 						activeRoute = router;
 
@@ -207,6 +238,7 @@
 		})();
 	}
 
+
 	(function(){
 		var pathnameNow = window.location.pathname;
 		var originHandler;
@@ -230,7 +262,6 @@
 			}
 		}
 	})();
-
 
 })(jQuery);
 
