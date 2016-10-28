@@ -189,7 +189,7 @@
 						var regExpSearchingParam;
 						var param = {};
 						if(paramStart > 0){
-							regExpSearchingParam = new RegExp('^.{'+ paramStart +'}([^/]+)');
+							regExpSearchingParam = new RegExp('^.{'+ paramStart +'}([^/#]+)');
 							param = path.match(regExpSearchingParam);
 							if(!!param[1]){
 								data[params.param] = param[1];
