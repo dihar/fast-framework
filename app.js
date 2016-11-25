@@ -11,7 +11,6 @@ app.use('/views', express.static(__dirname + '/views'));
 
 app.get('*', function(req, res){
 	if(/^\/(dist|views|browser-sync)/.test(req.url)){
-		console.log(4567)
 		res.status(404).send('Sorry cant find that!');
 		return false;
 	}
