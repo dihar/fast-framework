@@ -7,9 +7,12 @@
 	}
 	if(!window.ff.config){
 		window.ff.config = {
-			someSetting: 'some value'
+			someSetting: 'some value',
+			root: '/views/',
+			ext: '.mst'
 		}
 	}
+
 	if(!window.ff.state){
 		window.ff.state = {
 			loaderIsActive: 'true',
@@ -53,6 +56,93 @@
 		return deff.promise();
 	}
 
+	var globalEvents = [];
+	ff.event = {
+		/*
+			function on()
+
+			@param {String} event – name of event
+			@param {Function} callback – callback of event
+			@param {Object} options
+				{Object} contect – contect of callback
+				{Number} order – order of calling callback, then more the sooner
+				{Boolean} bubble – if false events whith less order doesn't calling
+				{String} label - caption of event, for ease removing
+				{Boolean} once - if true it will call one times
+		 */
+		on(event, callback, {context = {}, order = 1, bubble = true, label, once = false} = {}){
+			if(typeof event !== 'string'){
+				throw new Error('Event name must be string!');
+			}
+			if(typeof callback !== 'function'){
+				throw new Error('Event callback must be function!');
+			}
+			if(!(event in globalEvents)){
+				globalEvents[event] = [];
+			}
+			globalEvents[event].push({
+				callback,
+				context,
+				order,
+				bubble,
+				label,
+				once
+			});
+		},
+		/*
+			function off()
+
+			@param {String} event – name of event
+			@param {Function or String} callback – callback of event or label
+
+		 */
+		off(event, callback){
+			if(typeof event !== 'string'){
+				throw new Error('Event name must be string!');
+			}
+			var events = globalEvents[event];
+			if(!events || !events.length){
+				return false;
+			}
+			if(typeof callback === 'string'){
+				globalEvents[event] = events.filter(el => el.label !== callback );
+				return false;
+			}
+			if(typeof callback !== 'function' ){
+				delete globalEvents[event];
+				return false;
+			}
+			globalEvents[event] = events.filter(el => el.callback !== callback);
+		},
+		/*
+			function trigger()
+
+			@param {String} event – name of event
+			@param {Any} data – data which translate to calling callback
+		 */
+		trigger(event, data){
+			if(typeof event !== 'string'){
+				throw new Error('Event name must be string!');
+			}
+			if(!(event in globalEvents)){
+				return false;
+			}
+			globalEvents[event].sort(({order: a},{order: b}) => b - a).some(el=>{
+				el.callback.call(el.context, data);
+				if(el.once){
+					el.toDelete = true;
+				}
+				return !el.bubble;
+			});
+			globalEvents[event].filter(el=>!el.toDelete);
+		}
+	};
+
+
+	/*
+		Hash of tree helper
+		Help create trees of data and bind it to nodes
+	 */
 	ff.HashOfTree = class HashOfTree{
 		constructor(name) {
 			this.name = name;
@@ -116,4 +206,6 @@
 			return this.hash[this.name + '_-1'].childrenArr;
 		}
 	};
+
+
 })();

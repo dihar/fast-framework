@@ -1,0 +1,6 @@
+<h1>Post id = {{postId}}</h1>
+{{#hashActiving}}
+	<h2>Post activing is {{hashActiving}}</h2>
+	<h2>Post favorite is {{hashFavorite}}</h2>
+	<h2>Post subParameter is {{hashSubParameter}}</h2>
+{{/hashActiving}}

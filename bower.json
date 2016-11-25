@@ -16,7 +16,6 @@
     "bootstrap": "^3.3.6",
     "html5shiv": "^3.7.3",
     "respond": "^1.4.2",
-    "lightbox2": "^2.8.2",
     "jquery-router-plugin": "https://github.com/dihar/jquery-router-plugin.git",
     "mustache.js": "mustache#^2.2.1",
     "moment": "^2.15.0",

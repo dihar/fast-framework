@@ -1,3 +1,8 @@
-<div class="text-center">
+<div class="ff-app">
+	<header class="ff-header">
+		<h1 class="ff-header__logo">Fast-Framework</h1>
+		<h2 class="ff-header__description">– when there is no choice</h2>
+	</header>
 	{{> partialView}}
+
 </div>

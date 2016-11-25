@@ -279,14 +279,14 @@ $(function(){
 
 
 /** view.js expand ff namespace, simple get views with Mustache
-	* @function ff.view(name, callback, data)
+	* @function ff.view(name, data, callback)
 	* @param name
 		name of view (must equal file name in views folder withot extention)
-	* @param callback
-		callback succsess function with one parameter: template (template or mustache rendering)
 	* @param data
 		if you want mustache rendered template, set obj, without it, result will be template as it is on server;
 		specific options: layout – layout name (from view/layouts), dataLayout: data for layout
+	* @param callback
+		callback succsess function with one parameter: template (template or mustache rendering)
 	* @return jQuery Deferrer
 */
 ;(function ($){
@@ -304,7 +304,7 @@ $(function(){
 				dfd.resolve(result);
 			}
 
-			return function renderView(name, cb, data){
+			return function renderView(name, data, cb){
 				var config = window.ff.view.config;
 				var dfd = $.Deferred();
 				var result;
@@ -316,7 +316,7 @@ $(function(){
 								result = Mustache.render(template, data);
 
 								if(typeof data.layout === 'string'){
-									renderView('layouts/' + data.layout, null)
+									renderView('layouts/' + data.layout)
 										.then(function(layout){
 											result = Mustache.render(layout, data.dataLayout, {partialView: result});
 											resolveDfd(dfd, cb, result);
@@ -340,7 +340,7 @@ $(function(){
 						result = Mustache.render(views[name], data);
 
 						if(typeof data.layout === 'string'){
-							renderView('layouts/' + data.layout, null)
+							renderView('layouts/' + data.layout)
 								.then(function(layout){
 									result = Mustache.render(layout, data.dataLayout, {partialView: result});
 									resolveDfd(dfd, cb, result);

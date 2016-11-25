@@ -7,44 +7,31 @@
 @import url("@{bt_link}variables.less");
 @import url("@{bt_link}mixins.less");
 
-@import "./variables.less";
-@import "./fonts.less";
-@import "./sprite.less";
+@import "./variables";
+@import "./fonts";
+@import "./sprite";
 
-@import "./mixins.less";
+@import "./mixins";
+@import "./header";
+@import "./description";
 
 @img-path: '/dist/imgs/';
 
 
-html{
-	height: 100%;
-}
-
 body{
-	height: 100%;
-	overflow: hidden;
 	background: #fafafa;
+	font-family: Arial;
 }
 
 #mustache-target{
-	z-index: 1;
-	will-change: transform, opacity;
-	transition: transform 0.2s linear,
-		opacity 0.1s linear;
-	position: absolute;
-	top: 0;
-	left: 0;
-	bottom: 0;
-	right: 0;
-	font-family: "Formular", Arial;
-	overflow: auto;
+	position: relative;
 }
 
-.text-center{
-	text-align: center;
+.ff-app{
+	padding: 60px 0 0 0;
 }
 
-.loader{
+.ff-loader{
 	z-index: 2;
 	position: absolute;
 	bottom: 50px;

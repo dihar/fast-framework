@@ -1,1 +1,308 @@
-<h1>Welcome to {{name}}!</h1>
+<div class="ff-description">
+	<h3>Welcome to the {{name}}!</h3>
+	<hr>
+	<h4>Why it is exist?</h4>
+	<p>If you want to create fast prototype of project, this framework is suitable for you. Fast start. Ease and famous tools and concepts help you create simple project. I don't think that this decision suite to production, use it only for prototyping.</p>
+	<hr>
+	<h4>Main concepts</h4>
+	<ul>
+		<li>Naturally JQuery &#128522;. Rather 3.x version</li>
+		<li>Jquery-router-plugin. Now author of plugin doesn't see pull-requests, and I connect to my fork</li>
+		<li>For client-side templator I use Mustache</li>
+		<li>I use gulp</li>
+		<li>ES6 without modules</li>
+		<li>For work with date, I use moment.js</li>
+		<li>There is bootstrap, but I don't like it</li>
+		<li>The global object of core is ff</li>
+		<li>ff object can keep different helpers</li>
+		<li>ff.state keeps data for all application</li>
+		<li>ff.settings keeps settings for all application</li>
+		<li>ff.event help you work with events</li>
+		<li>ff.controller is a singleton of controllers, just functions, which you can get and set</li>
+		<li>ff.router is a wrap of jquery-router-plugin</li>
+		<li>ff.view is function for getting template. In it encapsulated ajax download from server and caching. There is supporting layouts</li>
+		<li>Link updator. Yes, it is SPA &#128514;.</li>
+		<li>Loading indicator help you display error or loading process</li>
+		<li>Try enjoy it &#128540;</li>
+	</ul>
+	<hr>
+	<h4>Controller</h4>
+	<p>
+		For adding controller, add file to src/js/controllers, like this
+	</p>
+	<p>
+		<code>
+ff.controller.set('index', function(/*params*/){
+
+	/*
+		This function will be called when controller activated
+		param parameter is Object, which is transmitted from router
+		index is a name of controller
+	 */
+
+}, function(/*toRoute*/){
+	/*
+		This function will be called when controller deactivated, use it to clear events and DOM
+		toRoute is a name of next route
+	 */
+});
+		</code>
+	</p>
+	<p>
+		If you want to get controller, do this
+	</p>
+	<p>
+		<code>
+var indexController = ff.controller.get('index');
+/*
+indexController is an object whith keys:
+	value – activate function
+	clearFunction – deactivate function 
+ */
+		</code>
+	</p>
+	<hr>
+	<h4>Router</h4>
+	<p>
+		At first, read documentation in github of jquery router plugin <a href="https://github.com/camme/jquery-router-plugin" target="_blank">Camilo Tapia github</a>, <a href="https://github.com/dihar/jquery-router-plugin">my fork (use it)</a>
+		<br>
+		In my fork I add possibillity with hash and replase stating. Add route to src/js/routes.js: 
+	</p>
+	<p>
+		<code>
+
+(function(){
+
+	ff.router.add('/', ff.controller.get('index'), { 
+		title: 'Index page', param: '', hashParams: {} 
+	});
+
+/*
+	ff.router.add(name, controller, {title, param, hashParams})
+	name {String or RegExp} Path to route.
+	controller {Object of controller} Controller, which bound to route
+	title {String} Title of page
+	param {String} name of dynamic param (see doc of jquery-router-plugin)
+	hashParams {String or Array of String} Names of parameters in hash, the order is very important
+ */
+
+})();
+		</code>
+	</p>
+	<p>You can add dynamic parameter to path, like this: </p>
+	<p>
+		<code>
+//post-controller.js
+ff.controller.set(function(param){
+	console.log('Dynamic parameter is available! Post id = ' + param.post_id);
+})
+
+//router.js
+ff.router.add('/post/:post_id', getCont('post'), {
+	param: 'post_id'
+});
+		</code>
+	</p>
+	<p>
+		<a href="/post/33" target="_blank">Try it!</a>
+	</p>
+	<p>You can add hash to link, and get parameters in controller</p>
+	<p>
+		<code>
+//post-controller.js
+ff.controller.set(function(param){
+	console.log('Dynamic parameter is available! Post id = ' + param.post_id);
+	console.log('Post activing is ' + param.hash.activing}}</h2>
+	console.log('Post favorite is ' + param.hash.favorite}}</h2>
+	console.log('Post subParameter is ' + param.hash.subParameter}}</h2>
+});
+
+//router.js
+ff.router.add('/post/:post_id', getCont('post'), {
+	param: 'post_id',
+	hashParams: ['activing', 'favorite', 'subParameter']
+});
+		</code>
+	</p>
+	<p>
+		<a href="/post/33/#activing=true&favorite=false&subParameter=yes" target="_blank">Try it!</a> <br>
+		Order of hash in array of hashParams must be indentical with order in link. Link in example is <code class="inline">/post/33/#activing=true&favorite=false&subParameter=yes</code> and array is <code class="inline">['activing', 'favorite', 'subParameter']</code>, you can't go to link <code class="inline">/post/33/#activing=true&subParameter=yes</code> , but you can go to this <code class="inline">/post/33/#activing=true&favorite=false</code> , if you want miss parameter, add it value, which you don't proccess in controller. And if last in path name there is a dynamic element add slash before hash string: <code class="inline">post/33/#hash</code>
+		<br>
+		Now we created two routes: index and post, but post have hash parameter, and without it will error handler called. We must create route without hash params.
+	</p>
+	<p>
+		<code>
+//post-controller.js
+ff.controller.set(function(param){
+	console.log('Dynamic parameter is available! Post id = ' + param.post_id);
+	if(!!param.hash){	
+		console.log('Post activing is ' + param.hash.activing);
+		console.log('Post favorite is ' + param.hash.favorite);
+		console.log('Post subParameter is ' + param.hash.subParameter);
+	}
+});
+
+//router.js
+ff.router.add('/', getCont('index'));
+ff.router.add('/post/:post_id', getCont('post'), {
+		param: 'post_id',
+	});
+ff.router.add('/post/:post_id', getCont('post'), {
+	param: 'post_id',
+	hashParams: ['activing', 'favorite', 'subParameter']
+});	
+		</code>
+	</p>
+	<p>
+		Go to route you can with 
+	</p>
+	<p>
+		<code>
+ff.router.go(/*path {String}*/,/* title {String}*/,/* addToHistory {Boolean}*/);
+		</code>
+	</p>
+	<p>Helper <code class="inline">ff.router.updateLinks(/*$container {Jquery or DOMElement object}*/)</code>, it will find links, check, that it is links for route, and change it's behavior</p>
+	<hr>
+	<h4>View</h4>
+	<p>
+		View is a function with three parameters: name of view, callback and data. Function return jQuery Deferred. When we call function there have getting template from server (default settings: root: '/views/', ext: '.mst') or cache (if it not first request) and called callback with argument result, also returned deferred with argument result. If we add data, result processed in Mustache. If in data there is key layout view wrapped layout (default from views/layouts). 
+		<br>
+		In templates you can use <a href="https://github.com/janl/mustache.js" target="_blank">Mustache syntax</a>
+		<br>
+		Let's write view for post:
+	</p>
+	<p>
+		<code>
+// views/layouts/main.mst
+
+&ltdiv class="ff-app"&gt
+	&ltheader class="ff-header"&gt
+		&lth1 class="ff-header__logo"&gtFast-Framework&lt/h1&gt
+		&lth2 class="ff-header__description"&gt– when there is no choice&lt/h2&gt
+	&lt/header&gt
+	&#123;&#123;&gt partialView}} &lt!-- here will be inserted view --&gt
+
+&lt/div&gt
+
+
+// views/post/index.mst
+
+&lth1&gtPost id = &#123;&#123;postId}}&lt/h1&gt
+&#123;&#123;#hashActiving}}
+	&lth2&gtPost activing is &#123;&#123;hashActiving}}&lt/h2&gt
+	&lth2&gtPost favorite is &#123;&#123;hashFavorite}}&lt/h2&gt
+	&lth2&gtPost subParameter is &#123;&#123;hashSubParameter}}&lt/h2&gt
+&#123;&#123;/hashActiving}}
+
+
+// src/js/controllers/post-controller.js
+
+ff.controller.set('post', function(param){
+	var data = {
+		postId: param.post_id,
+		hashActiving: param.hash.activing,
+		hashFavorite: param.hash.favorite,
+		hashSubParameter: param.hash.subParameter,
+		layout: 'main'
+	};
+	
+	var loadHandler = function(template){
+		$('#mustache-target').html(template); // add to dom
+		ff.state.hideLoader(); // hide loader, which showen in route
+	};
+
+	ff.view('post', data, loadHandler);
+	// or ff.view('post', data).then(loadHandler);
+});
+
+
+// src/js/router.js
+
+ff.router.add('/post/:post_id', getCont('post'), {
+		param: 'post_id',
+	});
+ff.router.add('/post/:post_id', getCont('post'), {
+	param: 'post_id',
+	hashParams: ['activing', 'favorite', 'subParameter']
+});
+		</code>
+	</p>
+	<p>
+		<a href="/post/33/#activing=true&favorite=false&subParameter=yes" target="_blank">See it</a>, <a href="/post/33" target="_blank">And it!</a><br>The name parameter must be equal file name from folder in settings. For example, you can load partial template with name views/partials/footer.mst : 
+	</p>
+	<code>
+ff.view('partials/footer', data, loadHandler);
+	</code>
+	<p>
+		Don't forget to insert result to the DOM!
+	</p>
+	<hr>
+	<h4>Start</h4>
+	<ul>
+		<li>Clone repository <code class="inline">git clone https://github.com/dihar/fast-framework.git</code></li>
+		<li>Install packages <code class="inline">npm install && bower install</code> (if will ask about jQuery choose last version)</li>
+		<li>Start project <code class="inline">npm run start</code>, and go to the localhost!</li>
+	</ul>
+	<hr>
+	<h4>Other features</h4>
+	<p>In src/js/main.js you can add code, wich executed latest. Here you can add global events handlers</p>
+	<br>
+	<p>
+		ff.event is a object with ease methods for work with events
+	</p>
+	<p>
+		ff.event.on()
+		<code>
+/*
+	function on()
+
+	@param {String} event – name of event
+	@param {Function} callback – callback of event
+	@param {Object} options
+		{Object} contect – contect of callback
+		{Number} order – order of calling callback, then more the sooner
+		{Boolean} bubble – if false events whith less order doesn't calling
+		{String} label - caption of event, for ease removing
+		{Boolean} once - if true it will call one times
+ */
+		</code>
+	</p>
+	<p>
+		ff.event.off()
+		<code>
+/*
+	function off()
+
+	@param {String} event – name of event
+	@param {Function or String} callback – callback of event or label
+
+ */
+		</code>
+	</p>
+	<p>
+		ff.event.trigger()
+		<code>
+/*
+	function trigger()
+
+	@param {String} event – name of event
+	@param {Any} data – data which translate to calling callback
+ */
+		</code>
+	</p>
+	<br>
+	<p>Hash of tree (<code class="inline">ff.hashOfTree</code>) helper help create trees of data and bind it to nodes</p>
+	<p><code class="inline">ff.fastResolve(data)</code> create resolved deferred</p>
+	<p><code class="inline">ff.fastReject(error)</code> create rejected deferred</p>
+	<p><code class="inline">ff.async(time, resolveFunction, data)</code> create resolved deferred after time value in ms</p>
+	<p>
+		Work with loader: 
+		<br>
+		<code class="inline">state.showLoader()</code> – show loader;
+		<br>
+		<code class="inline">state.hideLoader()</code> – hide it;
+		<br>
+		<code class="inline">state.errorLoader(err)</code> – display error;
+	</p>
+</div>
+
