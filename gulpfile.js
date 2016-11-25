@@ -20,8 +20,6 @@ const srcPath      = './src/';
 
 
 const jsMap = [
-	'js/globalSettings.js',
-	'js/core.js',
 	'js/controllers/*.js',
 	'js/router.js',
 	'js/main.js'
@@ -73,7 +71,8 @@ gulp.task('bootstrap', ()=>{
 });
 
 gulp.task('js',()=>{
-	return gulp.src(jsMap.map(el=>srcPath + el))
+	return gulp.src(['bower_components/fast-framework-core/globalSettings.js',
+					 'bower_components/fast-framework-core/core.js'].concat(jsMap.map(el=>srcPath + el)))
 		.pipe(plumber({
 	    	errorHandler: notify.onError('JS error: <%= error.message %>')
 	    }))

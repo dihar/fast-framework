@@ -16,9 +16,10 @@
     "bootstrap": "^3.3.6",
     "html5shiv": "^3.7.3",
     "respond": "^1.4.2",
-    "jquery-router-plugin": "https://github.com/dihar/jquery-router-plugin.git",
+    "jquery-router-plugin": "https://github.com/dihar/jquery-router-plugin.git#v1.00",
     "mustache.js": "mustache#^2.2.1",
     "moment": "^2.15.0",
-    "jquery": "^3.1.1"
+    "jquery": "^3.1.1",
+    "fast-framework-core": "git@github.com:dihar/fast-framework-core.git#0.01"
   }
 }
