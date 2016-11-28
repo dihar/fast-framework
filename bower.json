@@ -1,13 +1,13 @@
 {
-  "name": "gz",
-  "description": "gz system",
+  "name": "ff",
+  "description": "ff system",
   "main": "index.html",
   "authors": [
     "dihar"
   ],
   "license": "ISC",
   "keywords": [
-    "landing"
+    "fast framework"
   ],
   "homepage": "",
   "moduleType": [],
@@ -20,6 +20,6 @@
     "mustache.js": "mustache#^2.2.1",
     "moment": "^2.15.0",
     "jquery": "^3.1.1",
-    "fast-framework-core": "git@github.com:dihar/fast-framework-core.git#0.01"
+    "fast-framework-core": "https://github.com/dihar/fast-framework-core.git#0.01"
   }
 }
