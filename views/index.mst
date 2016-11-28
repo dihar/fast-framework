@@ -1,7 +1,7 @@
 <div class="ff-description">
 	<h3>Welcome to the {{name}}!</h3>
 	<hr>
-	<h4>Why it is exist?</h4>
+	<h4>Why does it exist?</h4>
 	<p>If you want to create fast prototype of project, this framework is suitable for you. Fast start. Ease and famous tools and concepts help you create simple project. I don't think that this decision suite to production, use it only for prototyping.</p>
 	<hr>
 	<h4>Main concepts</h4>
