@@ -24,7 +24,7 @@
     "browser-sync": "^2.11.1",
     "del": "^2.2.0",
     "express": "^4.14.0",
-    "fast-framework-core": "github:dihar/fast-framework-core",
+    "fast-framework-core": "^0.1.0",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^3.1.0",
     "gulp-babel": "^6.1.2",
