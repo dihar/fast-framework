@@ -1,8 +1,8 @@
 {
-  "name": "gz",
-  "version": "1.2.0",
+  "name": "fast-framework",
+  "version": "0.0.1",
   "private": true,
-  "description": "",
+  "description": "Simply framework for fast start and ease work. Main partials: jq, mustache, es6, moment.js.",
   "main": "index.html",
   "scripts": {
     "server": "node app",
@@ -20,6 +20,7 @@
   "license": "ISC",
   "dependencies": {
     "babel-preset-es2015": "^6.16.0",
+    "bower": "^1.8.0",
     "bootstrap": "^3.3.7",
     "browser-sync": "^2.11.1",
     "del": "^2.2.0",
