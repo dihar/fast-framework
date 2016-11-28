@@ -98,7 +98,7 @@ ff.controller.set(function(param){
 })
 
 //router.js
-ff.router.add('/post/:post_id', getCont('post'), {
+ff.router.add('/post/:post_id', ff.controller.get('post'), {
 	param: 'post_id'
 });
 		</code>
@@ -118,7 +118,7 @@ ff.controller.set(function(param){
 });
 
 //router.js
-ff.router.add('/post/:post_id', getCont('post'), {
+ff.router.add('/post/:post_id', ff.controller.get('post'), {
 	param: 'post_id',
 	hashParams: ['activing', 'favorite', 'subParameter']
 });
@@ -143,11 +143,11 @@ ff.controller.set(function(param){
 });
 
 //router.js
-ff.router.add('/', getCont('index'));
-ff.router.add('/post/:post_id', getCont('post'), {
+ff.router.add('/', ff.controller.get('index'));
+ff.router.add('/post/:post_id', ff.controller.get('post'), {
 		param: 'post_id',
 	});
-ff.router.add('/post/:post_id', getCont('post'), {
+ff.router.add('/post/:post_id', ff.controller.get('post'), {
 	param: 'post_id',
 	hashParams: ['activing', 'favorite', 'subParameter']
 });	
@@ -218,10 +218,10 @@ ff.controller.set('post', function(param){
 
 // src/js/router.js
 
-ff.router.add('/post/:post_id', getCont('post'), {
+ff.router.add('/post/:post_id', ff.controller.get('post'), {
 		param: 'post_id',
 	});
-ff.router.add('/post/:post_id', getCont('post'), {
+ff.router.add('/post/:post_id', ff.controller.get('post'), {
 	param: 'post_id',
 	hashParams: ['activing', 'favorite', 'subParameter']
 });

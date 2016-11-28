@@ -39,20 +39,20 @@ gulp.task('clean:imgs', ()=>{
 });
 
 gulp.task('jq', ()=>{
-	return gulp.src(['bower_components/jquery/dist/jquery.js',
-					 'bower_components/bootstrap/js/modal.js',
-					 'bower_components/jquery-router-plugin/jquery.router.js',
-					 'bower_components/mustache.js/mustache.min.js',
-					 'bower_components/moment/moment.js',
-					 'bower_components/moment/locale/ru.js'])
+	return gulp.src(['node_modules/jquery/dist/jquery.js',
+					 'node_modules/jquery-router-plugin/jquery.router.js',
+					 'node_modules/mustache/mustache.min.js',
+					 'node_modules/moment/moment.js',
+					 'node_modules/moment/locale/ru.js',
+					 'node_modules/fast-framework-core/core.js',])
 	.pipe(concat('jqBt.js'))
 	.pipe(uglify())
 	.pipe(gulp.dest(destPath + 'js/'));
 });
 
 gulp.task('ie9', ()=>{
-	return gulp.src(['/bower_components/html5shiv/html5shiv.js',
-					 '/bower_components/respond/src/respond.js'])
+	return gulp.src(['/node_modules/dist/html5shiv/html5shiv.js',
+					 '/node_modules/respond.js/dest/respond.min.js'])
 		.pipe(concat('ie9.js'))
 		.pipe(uglify())
 		.pipe(gulp.dest(destPath + 'js/'));
@@ -71,8 +71,7 @@ gulp.task('bootstrap', ()=>{
 });
 
 gulp.task('js',()=>{
-	return gulp.src(['bower_components/fast-framework-core/globalSettings.js',
-					 'bower_components/fast-framework-core/core.js'].concat(jsMap.map(el=>srcPath + el)))
+	return gulp.src(jsMap.map(el=>srcPath + el))
 		.pipe(plumber({
 	    	errorHandler: notify.onError('JS error: <%= error.message %>')
 	    }))
