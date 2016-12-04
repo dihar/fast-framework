@@ -4,19 +4,14 @@ If you want to create fast prototype of project, this framework is suitable for 
 
 ###Start on localhost:
 
-```
-npm install
-gulp build
-npm run start
-```
+`npm install`
+`npm run start`
 
 ###Start on server:
 
-```
-npm install
-gulp build
-npm run server
-```
+`npm install`
+`gulp build`
+`npm run server`
 
 ###DOCS
 
