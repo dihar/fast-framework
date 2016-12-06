@@ -4,14 +4,30 @@ If you want to create fast prototype of project, this framework is suitable for 
 
 ###Start on localhost:
 
-`npm install`
-`npm run start`
+```
+npm install
+npm run start
+```
+
+###Start on windows:
+
+```
+npm install
+npm run server
+gulp #in another terminal's tab
+```
 
 ###Start on server:
 
-`npm install`
-`gulp build`
-`npm run server`
+```
+npm install
+gulp build
+npm run server
+```
+
+###Problems
+
+If you will see error `Error: listen EADDRINUSE :::4422`, it is mean that port 4422 is busy, run command `ps`, see what pid runing on port and run `kill <PID>`;
 
 ###DOCS
 
