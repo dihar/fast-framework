@@ -111,7 +111,7 @@ gulp.task('sprite',()=>{
 			.pipe(spritesmith({
 			    imgName: 'sprite.png',
 			    cssName: 'sprite.less',
-			    imgPath: destPath + 'imgs/sprite.png'
+			    imgPath: destPath.slice(1) + 'imgs/sprite.png'
 			}));
 
 	spriteData.img.pipe(gulp.dest(destPath + 'imgs/'));
