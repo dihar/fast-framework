@@ -1,6 +1,6 @@
 {
   "name": "fast-framework",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "private": true,
   "description": "Simply framework for fast start and ease work. Main partials: jq, mustache, es6, moment.js.",
   "main": "index.html",
@@ -16,7 +16,7 @@
   "config": {
     "port": "4422"
   },
-  "author": "dihar",
+  "author": "dihar<diharin@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "babel-preset-es2015": "^6.16.0",
@@ -25,7 +25,7 @@
     "browser-sync": "^2.11.1",
     "del": "^2.2.0",
     "express": "^4.14.0",
-    "fast-framework-core": "^0.1.0",
+    "fast-framework-core": "^0.2.1",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^3.1.0",
     "gulp-babel": "^6.1.2",

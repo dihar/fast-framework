@@ -76,7 +76,7 @@ indexController is an object whith keys:
 	ff.router.add('/', ff.controller.get('index'), { 
 		title: 'Index page', param: '', hashParams: {} 
 	});
-
+	
 /*
 	ff.router.add(name, controller, {title, param, hashParams})
 	name {String or RegExp} Path to route.
@@ -162,6 +162,29 @@ ff.router.go(/*path {String}*/,/* title {String}*/,/* addToHistory {Boolean}*/);
 		</code>
 	</p>
 	<p>Helper <code class="inline">ff.router.updateLinks(/*$container {Jquery or DOMElement object}*/)</code>, it will find links, check, that it is links for route, and change it's behavior</p>
+	<hr>
+	<h4>Guards</h4>
+	<p>
+		If you want to protect your route, you can add guard. Guard will be processed before controller, and if return rejected deferred, will not porocessed to controller. You can process rejected guard to add in route params parameter 'guardError'.
+	</p>
+	<code>
+//some-guard-controller.js
+ff.controller.set('some-guard', function(){
+	ff.fastReject('message from guard');
+});
+
+//protected-controller.js
+ff.controller.set('protected', function(){
+	// never run
+});
+
+//router.js
+ff.router.add('index', [ff.controller.get('some-guard'), ff.controller.get('protected')], {
+	guardError: function(error){
+		console.log('not allowed: ', error);
+	}
+});
+	</code>
 	<hr>
 	<h4>View</h4>
 	<p>
