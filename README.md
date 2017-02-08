@@ -41,7 +41,7 @@ docker build -t kanaglic/fast-framework
 
 docker login //you must be authenticated to docker hub and have write acces to this repo
 
-docker push kanaglic/fast-framework
+docker push kanaglic/fast-framework .
 
 ...
 
