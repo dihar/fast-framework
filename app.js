@@ -10,7 +10,7 @@ app.use('/dist', express.static(__dirname + '/dist'));
 app.use('/views', express.static(__dirname + '/views'));
 
 app.get('*', function(req, res){
-	if(/^\/(dist|views|browser-sync)/.test(req.url)){
+	if(/^\/(dist|views|browser-sync|favicon\.ico)/.test(req.url)){
 		res.status(404).send('Sorry cant find that!');
 		return false;
 	}

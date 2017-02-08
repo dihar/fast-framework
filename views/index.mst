@@ -110,7 +110,7 @@ ff.router.add('/post/:post_id', ff.controller.get('post'), {
 	<p>
 		<code>
 //post-controller.js
-ff.controller.set(function(param){
+ff.controller.set('post', function(param){
 	console.log('Dynamic parameter is available! Post id = ' + param.post_id);
 	console.log('Post activing is ' + param.hash.activing}}</h2>
 	console.log('Post favorite is ' + param.hash.favorite}}</h2>
@@ -133,7 +133,7 @@ ff.router.add('/post/:post_id', ff.controller.get('post'), {
 	<p>
 		<code>
 //post-controller.js
-ff.controller.set(function(param){
+ff.controller.set('post', function(param){
 	console.log('Dynamic parameter is available! Post id = ' + param.post_id);
 	if(!!param.hash){	
 		console.log('Post activing is ' + param.hash.activing);
