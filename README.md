@@ -37,7 +37,7 @@ If you will see error `Error: listen EADDRINUSE :::4422`, it is mean that port 4
 
 ```
 //on local host
-docker build -t kanaglic/fast-framework
+docker build -t kanaglic/fast-framework .
 
 docker login //you must be authenticated to docker hub and have write acces to this repo
 
