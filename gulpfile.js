@@ -14,6 +14,7 @@ const sourcemaps   = require('gulp-sourcemaps');
 const spritesmith  = require('gulp.spritesmith');
 const del          = require('del');
 const babel        = require('gulp-babel');
+const fs 		   = require('fs');
 
 const destPath     = './dist/';
 const srcPath      = './src/';
@@ -27,10 +28,28 @@ const jsMap = [
 
 
 gulp.task('serve', ()=>{
-	browserSync.init({
-		proxy: 'localhost:' + process.env.npm_package_config_port,
-		notify: false,
-		open: false
+	(new Promise((res, rej)=>{
+		var packPort = process.env.npm_package_config_port;
+		if(packPort){
+			res(packPort);
+		} else{
+			fs.readFile(__dirname + '/package.json', 'utf8', function(err, data){
+				if(err) throw err;
+				var packageJSON = JSON.parse(data);
+				if(!packageJSON.config){
+					packageJSON.config = {};
+				}
+				res(packageJSON.config.port || 4420);
+			});
+		}
+	})).then(port =>{
+		browserSync.init({
+			proxy: 'localhost:' + port,
+			notify: false,
+			open: false
+		});
+	}, err => {
+		console.log(err);
 	});
 });
 
